@@ -1,13 +1,15 @@
 #include "MKL25Z4.h"
 #include "IR_REMOTE.h"
 #include "IR_controller.h"
+#include "Motors_controll.h"
 
 volatile uint8_t ir_data_ready = 0; 
 
 void Init(void) {
     // Turn on clock for ports and tmp
-    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK;
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTB_MASK |SIM_SCGC5_PORTA_MASK |SIM_SCGC5_PORTC_MASK;
     SIM->SCGC6 |= SIM_SCGC6_TPM0_MASK;
+		SIM->SCGC6 |= SIM_SCGC6_TPM1_MASK;
 
     // test leds
     PORTB->PCR[18] &= ~PORT_PCR_MUX_MASK;
@@ -22,6 +24,8 @@ void Init(void) {
 
 		// Initialization IR receiver
 		IR_Init();
+	
+		Motor_Init();
 
 
     // Set up interupts

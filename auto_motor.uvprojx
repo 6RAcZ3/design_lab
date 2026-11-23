@@ -399,6 +399,11 @@
               <FileType>5</FileType>
               <FilePath>.\IR_controller.h</FilePath>
             </File>
+            <File>
+              <FileName>Motors_controll.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Motors_controll.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -1,6 +1,7 @@
 #pragma once
 #include "MKL25Z4.h"
 #include "IR_REMOTE.h"
+#include "Motors_controll.h"
 
 volatile uint32_t ir_data = 0;       
 volatile uint8_t  overflow_count = 0;     
@@ -81,16 +82,42 @@ void IR_encode()
 {
 		if (bt_play == ir_data) {
 				start_control = !start_control;
+				Motor_Stop();
 		}
 	
 		if (start_control) {
-			switch (ir_data){			
+			switch (ir_data){
+				
 				case bt_vol_plus:
-						PTB->PTOR = (1 << 18);
+						Motor_Speed_Up();
 					break;
 				
 				case bt_vol_min:
-						PTB->PTOR = (1 << 19);
+						Motor_Speed_Down();
+					break;
+				
+				case bt_eq:
+						PTB->PTOR = (1 << 18);
+					break;
+				
+				case bt_2:
+						Motor_Forward();
+					break;
+				
+				case bt_5:
+							Motor_Stop();
+					break;
+				
+				case bt_4:
+							Motor_TurnLeft();
+					break;
+				
+				case bt_6:
+							Motor_TurnRight();
+					break;
+				
+				case bt_8:
+							Motor_Backward();
 					break;
 				
 				default:
