@@ -7,20 +7,24 @@
 #define BIN2 (1 << 8)
 
 volatile uint16_t speed = 50;
-
+void Motor_Set_Speed(void);
 void Motor_Init(void){
 	
 	PORTA->PCR[5] = PORT_PCR_MUX(1); // AIN1
   PORTA->PCR[4] = PORT_PCR_MUX(1); // AIN2
   PORTC->PCR[9] = PORT_PCR_MUX(1); // BIN1
   PORTC->PCR[8] = PORT_PCR_MUX(1); // BIN2
+	PORTC->PCR[3] = PORT_PCR_MUX(1);
 	
 	PTA->PDDR |= AIN1 | AIN2;
-  PTC->PDDR |= BIN1 | BIN2;
+  PTC->PDDR |= BIN1 | BIN2 | (1 << 3);
+	PTC->PSOR = (1 << 3);
+	
 	
 	PORTA->PCR[12] = PORT_PCR_MUX(3);
   PORTA->PCR[13] = PORT_PCR_MUX(3);
 	
+	Motor_Set_Speed();
 	
 	TPM1->SC = 0;                         
   TPM1->CNT = 0;
@@ -35,8 +39,8 @@ void Motor_Init(void){
 
 void Motor_Set_Speed(void){
 
-		TPM1->CONTROLS[0].CnV = MAX_PWM_VAL*(speed/100);
-		TPM1->CONTROLS[1].CnV = MAX_PWM_VAL*(speed/100);
+		TPM1->CONTROLS[0].CnV = (MAX_PWM_VAL * speed) / 100;
+		TPM1->CONTROLS[1].CnV = (MAX_PWM_VAL * speed) / 100;
 }
 
 void Motor_Stop(void){
@@ -44,6 +48,7 @@ void Motor_Stop(void){
 	PTA->PCOR = AIN1 | AIN2;
   PTC->PCOR = BIN1 | BIN2;
 	speed = 50;
+	Motor_Set_Speed();
 }
 
 void Motor_Forward(void){
@@ -51,8 +56,8 @@ void Motor_Forward(void){
 	PTA->PSOR = AIN1;
 	PTA->PCOR = AIN2;
 	
-	PTB->PSOR = BIN1;
-	PTB->PCOR = BIN2;
+	PTC->PSOR = BIN1;
+	PTC->PCOR = BIN2;
 }
 
 void Motor_Backward(void){
@@ -60,20 +65,20 @@ void Motor_Backward(void){
 	PTA->PSOR = AIN2;
 	PTA->PCOR = AIN1;
 	
-	PTB->PSOR = BIN2;
-	PTB->PCOR = BIN1;
+	PTC->PSOR = BIN2;
+	PTC->PCOR = BIN1;
 }
 
 void Motor_TurnLeft(void){
-	
-	PTA->PCOR = AIN1 | AIN2;
-	PTC->PSOR = BIN1;
+    PTA->PCOR = AIN1 | AIN2;
+    PTC->PSOR = BIN1;
+    PTC->PCOR = BIN2;
 }
 
 void Motor_TurnRight(void){
-	
-	PTC->PCOR = BIN1 | BIN2;
-	PTA->PSOR = AIN1;
+    PTC->PCOR = BIN1 | BIN2;
+    PTA->PSOR = AIN1;
+    PTA->PCOR = AIN2;
 }
 
 void Motor_Speed_Up(void){

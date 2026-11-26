@@ -26,6 +26,8 @@ void Init(void) {
 		IR_Init();
 	
 		Motor_Init();
+	
+		
 
 
     // Set up interupts

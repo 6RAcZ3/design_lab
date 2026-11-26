@@ -3,6 +3,7 @@
 #include "IR_REMOTE.h"
 #include "Motors_controll.h"
 
+
 volatile uint32_t ir_data = 0;       
 volatile uint8_t  overflow_count = 0;     
 volatile uint8_t  bit_index = 0;
@@ -97,7 +98,8 @@ void IR_encode()
 					break;
 				
 				case bt_eq:
-						PTB->PTOR = (1 << 18);
+
+								PTB->PTOR = (1 << 18); 
 					break;
 				
 				case bt_2:
@@ -119,6 +121,7 @@ void IR_encode()
 				case bt_8:
 							Motor_Backward();
 					break;
+				
 				
 				default:
 					return;
